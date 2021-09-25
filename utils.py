@@ -1,8 +1,9 @@
 import collections
 
-def create_vocab_from_file(file_path: str):
+def create_vocab_from_file(file_path: str) -> collections.defaultdict:
     """Reads the file path of a text file and returns a dictionary of 
-    tokens and their frequencies.
+    words with space separated letters and a end of word token with their 
+    frequencies.
 
     Args:
         file_path (str): The path of the text file
@@ -20,5 +21,30 @@ def create_vocab_from_file(file_path: str):
                 # Join the letters of a word separeted by a space.
                 # Add a `_` at the end. Finally, increase the count 
                 # of this token.
-                vocab[' '.join(list(word)) + '_'] += 1
+                vocab[' '.join(list(word)) + ' _'] += 1
     return vocab
+
+
+def get_tokens_from_vocab(vocab: dict) -> list:
+    """Reads the vocabularies. Then create count of each individual token. 
+    Also creates the token to word map. Finally returns the tokens and its
+    frequencies in a dictionary. And token to word map as a dictionary.
+
+    Args:
+        vocab (dict): The vocabularies dictionary.
+
+    Returns:
+        (dict, dict): Two dictionaries. The first one contains the tokens 
+        and their frequencies. The second one contains the token to word map.
+    """
+    frequencies = collections.defaultdict(int)
+    tokens_to_words = {}
+    
+    for word, count in vocab.items():
+        chars = word.split()
+        
+        for char in chars:
+            frequencies[char] += count
+        tokens_to_words[''.join(chars)] = chars
+    return frequencies, tokens_to_words
+    
