@@ -7,7 +7,12 @@ import collections
 
 
 class BPE(object):
-    def __init__(self, vocab: Union[str, dict], unknown_token: str = "<UNK>") -> None:
+    def __init__(
+        self, 
+        vocab: Union[str, dict], 
+        end_token: str = '_', 
+        unknown_token: str = "<UNK>"
+    ) -> None:
         super().__init__()
         if isinstance(vocab, str):
             self.vocab = utils.create_vocab_from_file(vocab)
@@ -18,6 +23,7 @@ class BPE(object):
                 "vocab must be either str (text file path) or dict (vocab)"
             )
 
+        self.end_token = end_token
         self.unknown_token = unknown_token
         self.tokens = None
         self.words_to_tokens = None
@@ -45,7 +51,11 @@ class BPE(object):
 
         print("Training finished")
 
-    def tokenize(self, word: str, tokens: list = None) -> list:
+    def tokenize(self, word) -> list:
+        word += self.end_token
+        return self.__tokenize(word)
+
+    def __tokenize(self, word: str, tokens: list = None) -> list:
         if tokens is None:
             tokens = self.tokens
         # if the word is in the vocab, return the word
@@ -80,13 +90,14 @@ class BPE(object):
                 # tokenize next subwords and append them to the output tokens
                 out_tokens.extend(self.tokenize(subword, self.tokens[i+1:]))
                 out_tokens.append(temp_token)
-                
+
                 # update the start index for the last subword
                 subword_start_index = end_index + len(temp_token)
-                
+
             # get the remaining subword
             remaining_subword = word[subword_start_index:]
-            out_tokens.extend(self.tokenize(remaining_subword, self.tokens[i+1:]))
+            out_tokens.extend(self.tokenize(
+                remaining_subword, self.tokens[i+1:]))
             break
         return out_tokens
 
