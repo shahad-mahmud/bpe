@@ -38,13 +38,13 @@ def get_tokens_from_vocab(vocab: dict) -> list:
         and their frequencies. The second one contains the token to word map.
     """
     frequencies = collections.defaultdict(int)
-    tokens_to_words = {}
+    words_to_tokens = {}
     
     for word, count in vocab.items():
         chars = word.split()
         
         for char in chars:
             frequencies[char] += count
-        tokens_to_words[''.join(chars)] = chars
-    return frequencies, tokens_to_words
+        words_to_tokens[''.join(chars)] = chars
+    return frequencies, words_to_tokens
     
