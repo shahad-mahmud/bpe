@@ -88,7 +88,7 @@ class BPE(object):
             for end_index in subword_end_indices:
                 subword = word[subword_start_index:end_index]
                 # tokenize next subwords and append them to the output tokens
-                out_tokens.extend(self.tokenize(subword, self.tokens[i+1:]))
+                out_tokens.extend(self.__tokenize(subword, self.tokens[i+1:]))
                 out_tokens.append(temp_token)
 
                 # update the start index for the last subword
@@ -96,7 +96,7 @@ class BPE(object):
 
             # get the remaining subword
             remaining_subword = word[subword_start_index:]
-            out_tokens.extend(self.tokenize(
+            out_tokens.extend(self.__tokenize(
                 remaining_subword, self.tokens[i+1:]))
             break
         return out_tokens

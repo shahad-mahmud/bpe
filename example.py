@@ -1,4 +1,3 @@
-import utils
 from bpe import BPE
 
 file_path = 'files/Pride and Prejudice.txt'
